@@ -1,9 +1,39 @@
-How to Run the Project
+##  RAG System (AI-Powered Document Q&A )
 
-Prerequisites
-Java 25 
-Maven
-Docker & Docker Compose
+A **Retrieval-Augmented Generation (RAG)** application that lets you ask natural language questions about your private documents and get **accurate, source‑backed answers** — all running locally on your machine. No cloud APIs, no data leaks, zero cost.
+
+### What It Does
+
+- **Ingests** your documents (PDF, plain text) and automatically splits them into optimal chunks.
+- **Converts** each chunk into an embedding (a numerical representation of its meaning) using a local embedding model.
+- **Stores** the embeddings in a **PostgreSQL + pgvector** database for fast semantic search.
+- **Answers** user questions by:
+  1. Retrieving the most relevant document chunks using similarity search.
+  2. Feeding those chunks to a local **LLM (Ollama + Llama3)** along with the question.
+  3. Generating a concise answer **strictly based on the provided documents**.
+- **Returns** the answer together with the original source text and similarity scores, so you always know where the information came from.
+
+
+### Key Features
+
+- **Full RAG pipeline**: load → chunk → embed → store → retrieve → generate.
+- **Local & private**: uses Ollama for LLM and embeddings, no internet required after setup.
+- **Semantic search**: finds relevant information even when the user’s wording differs from the document text.
+- **Source citations**: each response includes the original document snippets and their relevance scores.
+- **Model flexibility**: easily swap between different Ollama models (1B, 3B, 7B, etc.) depending on your hardware and accuracy needs.
+- **REST API**: simple endpoints for ingestion and querying, ready for integration with any frontend.
+- **Containerised**: PostgreSQL + pgvector (and optionally Ollama) run in Docker for a one‑command start.
+
+### Tech Stack
+
+**Backend:** Java 17, Spring Boot 3, Spring AI  
+**AI:** Ollama (Llama3 for chat, nomic-embed-text for embeddings)  
+**Vector Store:** PostgreSQL + pgvector (with HNSW index)  
+**Document Processing:** Apache Tika (multi‑format)
+**Infrastructure:** Docker, Docker Compose  
+**Build:** Maven
+
+How to Run the Project
 
 1. Start PostgreSQL + pgvector
 
