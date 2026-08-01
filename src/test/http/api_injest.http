@@ -1,0 +1,108 @@
+# Ingest a text document
+POST http://localhost:8080/api/ingest/text
+Content-Type: application/json
+
+{
+  "text": "Our return policy allows refunds within 30 days of purchase. Damaged items can be returned within 90 days for a full refund. Software products and food items are not eligible for return.",
+  "source": "return-policy"
+}
+
+
+###
+# Ingest another document
+POST http://localhost:8080/api/ingest/text
+Content-Type: application/json
+
+{
+  "text": "Standard shipping takes 3-5 business days. Express shipping takes 1-2 business days and costs $15 extra. International shipping takes 7-14 business days.",
+  "source": "shipping-policy"
+}
+
+###
+# Simple question
+POST http://localhost:8080/api/query/ask
+Content-Type: application/json
+
+{
+    "question":"Can I return a broken laptop"
+}
+
+###
+# ingest a pdf file contain policies
+POST http://localhost:8080/api/ingest/pdf
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="return-policy.pdf"
+Content-Type: application/pdf
+
+< ../static/return_policy.pdf
+--boundary
+Content-Disposition: form-data; name="source"
+
+return-policy
+--boundary--
+
+###
+###
+# Simple question about policies
+POST http://localhost:8080/api/query/ask
+Content-Type: application/json
+
+{
+  "question":"What are none returnable items?"
+}
+
+###
+#upload refund policy using upload endpoint
+POST http://localhost:8080/api/ingest/upload
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="refund-policy.pdf"
+Content-Type: application/pdf
+
+< ../static/refund_policy.pdf
+--boundary
+Content-Disposition: form-data; name="source"
+
+refund-policy
+--boundary--
+
+###
+###
+# ask a question for refund for Direct match run successfully in 1b model
+POST http://localhost:8080/api/query/ask
+Content-Type: application/json
+
+{
+  "question":"Are digital goods refundable?"
+}
+
+###
+# ask a question for refund for Slight rephrase run successfully in 3b model
+POST http://localhost:8080/api/query/ask
+Content-Type: application/json
+
+{
+  "question":"Can I get my money back for a software download?"
+}
+
+###
+# ask a question for refund for Inference required ifter it should run in a more powerfull model
+POST http://localhost:8080/api/query/ask
+Content-Type: application/json
+
+{
+  "question":"Can I return a broken laptop?"
+}
+###
+#
+#Direct match → "Are digital goods refundable?"
+#
+#Slight rephrase → "Can I get my money back for a software download?"
+#
+#Inference required → "Can I return a broken laptop?" (damaged = broken)
+#
+#Multi‑policy conflict → "I bought an annual subscription 10 days ago, can I cancel and get a refund?"
+#

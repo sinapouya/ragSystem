@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  ollama:
+    image: ollama/ollama:0.32.5  
+    container_name: ollama
+    ports:
+      - "11434:11434"            
+    volumes:
+      - ollama_data:/root/.ollama 
+    restart: unless-stopped
+  open-webui:
+    image: openwebui/open-webui:latest-slim
+    container_name: open-webui
+    ports:
+     - "3000:8080"                 
+    volumes:
+     - open-webui_data:/app/backend/data
+    restart: unless-stopped
+  
+volumes:
+  ollama_data:                
+  open-webui_data:
