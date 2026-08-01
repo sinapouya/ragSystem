@@ -1,12 +1,9 @@
 How to Run the Project
 
-
 Prerequisites
 Java 25 
 Maven
 Docker & Docker Compose
-Ollama installed and running locally
-(Install: curl -fsSL https://ollama.com/install.sh | sh)
 
 1. Start PostgreSQL + pgvector
 bash
