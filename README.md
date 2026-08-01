@@ -6,12 +6,12 @@ Maven
 Docker & Docker Compose
 
 1. Start PostgreSQL + pgvector
-bash
+
 docker-compose up -d
 This starts a PostgreSQL container with the pgvector extension already enabled.
 Default credentials: postgres / secret, database vectordb.
 
-2. Start Ollama and Pull Required Models
+3. Start Ollama and Pull Required Models
 Make sure Ollama is running:
 in ollama folder :
 
