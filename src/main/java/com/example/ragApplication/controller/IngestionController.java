@@ -1,23 +1,22 @@
 package com.example.ragApplication.controller;
 
-import com.example.ragApplication.enums.ResponseStatus;
 import com.example.ragApplication.model.ApiResponse;
 import com.example.ragApplication.model.IngestResponse;
 import com.example.ragApplication.model.Ingest;
 import com.example.ragApplication.service.IngestionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/api/ingest")
 public class IngestionController {
+    private static final Logger log = LoggerFactory.getLogger(IngestionController.class);
 
     private final IngestionService ingestionService;
 
@@ -38,16 +37,14 @@ public class IngestionController {
     @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<IngestResponse>>  uploadFile(
             @RequestParam("file") @NotNull MultipartFile file,
-            @RequestParam(defaultValue = "uploaded") String source) throws IOException {
+            @RequestParam(defaultValue = "uploaded") String source) {
 
-        Path tempFile = Files.createTempFile("rag-upload-", "-" + file.getOriginalFilename());
-        file.transferTo(tempFile.toFile());
+        log.info("Received file upload: {}, size: {} bytes",
+                file.getOriginalFilename(), file.getSize());
 
-        int chunkCount = ingestionService.ingestDocument(
-                tempFile.toString(), source
-        );
+        // 1. Use the new method that accepts MultipartFile directly
+        int chunkCount = ingestionService.ingestDocument(file, source);
 
-        Files.delete(tempFile);
 
         IngestResponse ingestResponse = new IngestResponse(
                 chunkCount,
@@ -57,12 +54,9 @@ public class IngestionController {
     }
     @PostMapping(value = "/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<IngestResponse>> ingestPdf(@RequestParam("file") @NotNull MultipartFile file,
-                                                    @RequestParam String source) throws IOException {
+                                                    @RequestParam String source)  {
         String sourceName = source==null?"":source;
-        Path tempFile = Files.createTempFile("upload-"+file.getName(), ".pdf");
-        file.transferTo(tempFile.toFile());
-        int chunkCount = ingestionService.ingestPdf(tempFile.toString(), sourceName);
-        Files.deleteIfExists(tempFile);
+        int chunkCount = ingestionService.ingestDocument(file, sourceName);
         IngestResponse ingestResponse = new IngestResponse(
                 chunkCount,
                 source
