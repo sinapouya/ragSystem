@@ -1,6 +1,6 @@
-package com.example.ragApplication.service;
+package com.example.docMind.service;
 
-import com.example.ragApplication.model.Question;
+import com.example.docMind.model.Question;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;

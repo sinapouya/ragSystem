@@ -1,4 +1,4 @@
-package com.example.ragApplication.model;
+package com.example.docMind.model;
 
 public record Question(String question) {
 }

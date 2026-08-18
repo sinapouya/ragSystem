@@ -1,9 +1,9 @@
-package com.example.ragApplication.controller;
+package com.example.docMind.controller;
 
-import com.example.ragApplication.model.Answer;
-import com.example.ragApplication.model.ApiResponse;
-import com.example.ragApplication.model.Question;
-import com.example.ragApplication.service.RagService;
+import com.example.docMind.model.Answer;
+import com.example.docMind.model.ApiResponse;
+import com.example.docMind.model.Question;
+import com.example.docMind.service.RagService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

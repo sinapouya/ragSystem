@@ -1,4 +1,4 @@
-package com.example.ragApplication;
+package com.example.docMind;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -18,8 +18,94 @@ spring:
     url: jdbc:postgresql://localhost:5432/vectordb
     username: postgres
     password: secret
+    # Max file size: 10MB
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
 server:
   port: 8080
 logging:
   level:
     org.springframework.ai: DEBUG
+# ============================================
+# MinIO Configuration
+# ============================================
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin123
+  bucket-name: docs-documents
+
+# Chapter detection patterns (externalized for easy updates!)
+chapter:
+  detection:
+    patterns:
+      # ---------- ENGLISH ----------
+      - regex: "(?i)(?=Chapter\\s+\\d+)"
+        label: "Chapter"
+        language: "English"
+
+      # ---------- FRENCH ----------
+      - regex: "(?i)(?=Chapitre\\s+\\d+)"
+        label: "Chapitre"
+        language: "French"
+
+      # ---------- GERMAN ----------
+      - regex: "(?i)(?=Kapitel\\s+\\d+)"
+        label: "Kapitel"
+        language: "German"
+
+      # ---------- SPANISH ----------
+      - regex: "(?i)(?=Capítulo\\s+\\d+)"
+        label: "Capítulo"
+        language: "Spanish"
+
+      # ---------- ITALIAN ----------
+      - regex: "(?i)(?=Capitolo\\s+\\d+)"
+        label: "Capitolo"
+        language: "Italian"
+
+      # ---------- CHINESE / JAPANESE (Simplified) ----------
+      - regex: "(第\\s*[一二三四五六七八九十百千万]+\\s*章)"
+        label: "Chapter"
+        language: "Chinese"
+
+      # ---------- JAPANESE ----------
+      - regex: "(第\\s*[一二三四五六七八九十百千万]+\\s*章)"
+        label: "Chapter"
+        language: "Japanese"
+
+      # ---------- ARABIC ----------
+      - regex: "(?i)(?=الفصل\\s+\\d+)"
+        label: "الفصل"
+        language: "Arabic"
+
+      # ---------- RUSSIAN ----------
+      - regex: "(?i)(?=Глава\\s+\\d+)"
+        label: "Глава"
+        language: "Russian"
+
+      # ---------- GENERAL: Numbered sections (1., 2., etc.) ----------
+      - regex: "(?m)^\\s*\\d+\\.\\s+[A-ZА-Я][A-ZА-Я\\s]*$"
+        label: "Section"
+        language: "General"
+
+      # ---------- GENERAL: Part (Part 1, Part 2, etc.) ----------
+      - regex: "(?i)(?=Part\\s+\\d+)"
+        label: "Part"
+        language: "General"
+
+      # ---------- GENERAL: Roman numerals (I., II., III., etc.) ----------
+      - regex: "(?m)^\\s*[IVXLCDM]+\\.\\s+[A-Z][A-Z\\s]*$"
+        label: "Part"
+        language: "General"
+

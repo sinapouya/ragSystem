@@ -1,4 +1,4 @@
-package com.example.ragApplication.config;
+package com.example.docMind.config;
 
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.VectorStore;
